@@ -1,133 +1,198 @@
-using UnityEngine;
-using UnityEngine.SceneManagement; // Оставляем, т.к. используется в Die() и LoadNextLevel()
+п»їusing UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
+using TMPro;
 
 public class PlayerInteractionHandler : MonoBehaviour
 {
-    [Header("Основные Настройки")]
+    [Header("РћСЃРЅРѕРІРЅС‹Рµ РќР°СЃС‚СЂРѕР№РєРё")]
     private Vector3 startPosition;
     private Rigidbody playerRigidbody;
-    private Renderer playerRenderer; // Сюда будет назначен рендерер игрока
+    private Renderer playerRenderer;
+    private Collider playerCollider; // <--- Р”РћР‘РђР’Р›Р•РќРћ: РЎСЃС‹Р»РєР° РЅР° РєРѕР»Р»Р°Р№РґРµСЂ РёРіСЂРѕРєР°
 
-    [Header("Настройки Респауна")]
-    public int flashCount = 4; // Количество вспышек при респауне
-    public float flashDuration = 0.1f; // Длительность каждого этапа вспышки (скрыт/видим)
-    private bool isRespawning = false; // Флаг, чтобы предотвратить повторный респаун во время респауна
+    [Header("РќР°СЃС‚СЂРѕР№РєРё Р РµСЃРїР°СѓРЅР°")]
+    public int flashCount = 4;
+    public float flashDuration = 0.1f;
+    private bool isRespawning = false;
 
-    [Header("Эффекты")]
-    [Tooltip("Префаб эффекта частиц при смерти (кровь)")]
-    public GameObject deathEffectPrefab; // СЮДА НУЖНО ПЕРЕТАЩИТЬ ПРЕФАБ PlayerDeathEffect
+    [Header("Р­С„С„РµРєС‚С‹")]
+    public GameObject deathEffectPrefab;
+
+    [Header("РРЅС‚РµСЂС„РµР№СЃ")] // <--- Р”РћР‘РђР’Р›Р•РќРђ РЎР•РљР¦РРЇ
+    [Tooltip("РЎСЃС‹Р»РєР° РЅР° TextMeshPro Text РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ СЃС‡РµС‚Р° РјРѕРЅРµС‚")]
+    public TextMeshProUGUI coinText; // <--- Р”РћР‘РђР’Р›Р•РќРћ: РЎСЃС‹Р»РєР° РЅР° UI С‚РµРєСЃС‚
+    private int coinCount = 0; // <--- Р”РћР‘РђР’Р›Р•РќРћ: РЎС‡РµС‚С‡РёРє РјРѕРЅРµС‚
 
     void Awake()
     {
-        startPosition = transform.position; // Запоминаем стартовую позицию
+        startPosition = transform.position;
         playerRigidbody = GetComponent<Rigidbody>();
-        // Пытаемся найти рендерер, даже если он в дочернем объекте
         playerRenderer = GetComponent<Renderer>();
-        if (playerRenderer == null)
-        {
-            playerRenderer = GetComponentInChildren<Renderer>();
-        }
+        playerCollider = GetComponent<Collider>(); // <--- Р”РћР‘РђР’Р›Р•РќРћ: РџРѕР»СѓС‡Р°РµРј РєРѕР»Р»Р°Р№РґРµСЂ
 
-        // Проверки на наличие компонентов
-        if (playerRigidbody == null) { Debug.LogError("Rigidbody не найден на игроке!", this); }
-        if (playerRenderer == null) { Debug.LogError("Renderer не найден на игроке или его дочерних объектах!", this); }
-        if (deathEffectPrefab == null) { Debug.LogError("Префаб 'Death Effect Prefab' не назначен в инспекторе!", this); }
+        // РС‰РµРј СЂРµРЅРґРµСЂРµСЂ РІ РґРѕС‡РµСЂРЅРёС…, РµСЃР»Рё РЅРµС‚ РЅР° РѕСЃРЅРѕРІРЅРѕРј
+        if (playerRenderer == null) playerRenderer = GetComponentInChildren<Renderer>();
+
+        // РџСЂРѕРІРµСЂРєРё
+        if (playerRigidbody == null) Debug.LogError("Rigidbody РЅРµ РЅР°Р№РґРµРЅ!", this);
+        if (playerRenderer == null) Debug.LogError("Renderer РЅРµ РЅР°Р№РґРµРЅ!", this);
+        if (playerCollider == null) Debug.LogError("Collider РЅРµ РЅР°Р№РґРµРЅ!", this); // <--- Р”РћР‘РђР’Р›Р•РќРћ: РџСЂРѕРІРµСЂРєР° РєРѕР»Р»Р°Р№РґРµСЂР°
+        if (deathEffectPrefab == null) Debug.LogError("РџСЂРµС„Р°Р± 'Death Effect Prefab' РЅРµ РЅР°Р·РЅР°С‡РµРЅ!", this);
+        if (coinText == null)
+        {
+            Debug.LogError("РЎСЃС‹Р»РєР° РЅР° 'Coin Text' (TextMeshProUGUI) РЅРµ РЅР°Р·РЅР°С‡РµРЅР° РІ РёРЅСЃРїРµРєС‚РѕСЂРµ!", this);
+        }
+        UpdateCoinUI(); // РћР±РЅРѕРІР»СЏРµРј С‚РµРєСЃС‚ РїСЂРё СЃС‚Р°СЂС‚Рµ (С‡С‚РѕР±С‹ РїРѕРєР°Р·Р°С‚СЊ 0)
     }
 
-    // Этот метод оставим без изменений (для столкновений не-триггеров)
     void OnCollisionEnter(Collision collision)
     {
-        
-
-        // --- НАША МОДИФИЦИРОВАННАЯ ЛОГИКА ---
-        // Логика для RespawnHazard (респаун на старте)
         if (!isRespawning && collision.gameObject.CompareTag("RespawnHazard"))
         {
-            // Запускаем последовательность с частицами и респауном
             StartRespawnWithDeathEffect();
         }
-        // ------------------------------------
+        // ...
     }
 
-    
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Finish"))
+        {
+            LoadNextLevel();
+        }
 
-    // --- НОВЫЙ МЕТОД ДЛЯ ЗАПУСКА РЕСПАУНА С ЭФФЕКТОМ ---
+        if (other.gameObject.CompareTag("Bonus"))
+        {
+            AddCoins();
+        }
+
+
+
+
+    }
+
+    public void AddCoins()
+    {       
+
+        coinCount += 1;
+        Debug.Log($"Р”РѕР±Р°РІР»РµРЅРѕ 1 РјРѕРЅРµС‚. Р’СЃРµРіРѕ: {coinCount}");
+        UpdateCoinUI();
+    }
+
+   
+    private void UpdateCoinUI()
+    {
+        if (coinText != null)
+        {
+            coinText.text = "Coins: " + coinCount; // Р¤РѕСЂРјРёСЂСѓРµРј С‚РµРєСЃС‚
+        }
+    }
+
+    void LoadNextLevel()
+    {
+        // ... (РєРѕРґ Р±РµР· РёР·РјРµРЅРµРЅРёР№) ...
+        if (isRespawning) return;
+        Debug.Log("РЈСЂРѕРІРµРЅСЊ РїСЂРѕР№РґРµРЅ! Р—Р°РіСЂСѓР·РєР° СЃР»РµРґСѓСЋС‰РµРіРѕ...");
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextSceneIndex = currentSceneIndex + 1;
+        if (nextSceneIndex < SceneManager.sceneCountInBuildSettings) SceneManager.LoadScene(nextSceneIndex);
+        else { Debug.Log("Р’СЃРµ СѓСЂРѕРІРЅРё РїСЂРѕР№РґРµРЅС‹!"); SceneManager.LoadScene(0); }
+    }
+
     void StartRespawnWithDeathEffect()
     {
-        if (isRespawning) return; // Если уже респаунимся, ничего не делаем
+        if (isRespawning) return;
+        isRespawning = true;
+        Debug.Log("РЎС‚РѕР»РєРЅРѕРІРµРЅРёРµ СЃ RespawnHazard! РћС‚РєР»СЋС‡Р°РµРј РёРіСЂРѕРєР°, РїРѕРєР°Р·С‹РІР°РµРј СЌС„С„РµРєС‚...");
 
-        Debug.Log("Игрок коснулся RespawnHazard! Запуск респауна...");
-        isRespawning = true; // Ставим флаг, что процесс начался
-
-        // 1. СОЗДАЕМ ЭФФЕКТ ЧАСТИЦ СМЕРТИ (КРОВЬ)
-        //    в текущей позиции игрока, ПЕРЕД тем как его переместить
-        if (deathEffectPrefab != null)
+        // --- РР—РњР•РќР•РќРќР«Р™ РџРћР РЇР”РћРљ ---
+        // 1. РћРўРљР›Р®Р§РђР•Рњ Р’Р·Р°РёРјРѕРґРµР№СЃС‚РІРёРµ Рё Р’РёРґРёРјРѕСЃС‚СЊ РР“Р РћРљРђ
+        if (playerCollider != null)
         {
-            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
-            // Префаб сам себя уничтожит благодаря Stop Action = Destroy
+            playerCollider.enabled = false; // <--- Р’РђР–РќРћ: РћС‚РєР»СЋС‡Р°РµРј РєРѕР»Р»Р°Р№РґРµСЂ РџР•Р Р•Р” СЌС„С„РµРєС‚РѕРј
         }
-        else
-        {
-            Debug.LogWarning("Префаб эффекта смерти не назначен!");
-        }
-
-        // 2. НЕМЕДЛЕННО останавливаем движение игрока, чтобы он не улетел
-        //    ПОСЛЕ создания эффекта частиц
         if (playerRigidbody != null)
         {
-            playerRigidbody.velocity = Vector3.zero;
+            playerRigidbody.isKinematic = true; // Р”РµР»Р°РµРј РєРёРЅРµРјР°С‚РёС‡РµСЃРєРёРј
+            playerRigidbody.velocity = Vector3.zero; // РћР±РЅСѓР»СЏРµРј СЃРєРѕСЂРѕСЃС‚СЊ РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№
             playerRigidbody.angularVelocity = Vector3.zero;
-            playerRigidbody.isKinematic = true; // Делаем кинематическим на время респауна
         }
-
-        // 3. ЗАПУСКАЕМ КОРУТИНУ для перемещения и мигания
-
-        StartCoroutine(RespawnCoroutine());
-    }
-    // -----------------------------------------------
-
-    IEnumerator RespawnCoroutine()
-    {
-        // Игрок уже остановлен и невидим (т.к. isKinematic=true и эффект создан)
-
-        // 1. ПЕРЕМЕЩЕНИЕ ИГРОКА В СТАРТОВУЮ ТОЧКУ
-        // Мы делаем это здесь, после создания частиц и остановки
-        transform.position = startPosition;
-        // Опционально: сбросить вращение
-        // transform.rotation = Quaternion.identity;
-
-        // Небольшая пауза перед миганием, чтобы игрок точно переместился
-        yield return null; // Ждем один кадр
-
-        // 2. ЭФФЕКТ ВСПЫШКИ (МИГАНИЕ РЕНДЕРЕРА)
         if (playerRenderer != null)
         {
-            for (int i = 0; i < flashCount; i++)
+            playerRenderer.enabled = false; // РЎРєСЂС‹РІР°РµРј РёРіСЂРѕРєР°
+        }
+        // --- РљРћРќР•Р¦ РР—РњР•РќР•РќРР™ Р’ РџРћР РЇР”РљР• ---
+
+        // 2. РЎРћР—Р”РђР•Рњ Р­Р¤Р¤Р•РљРў (С‚РµРїРµСЂСЊ С‡Р°СЃС‚РёС†С‹ РЅРµ СЃС‚РѕР»РєРЅСѓС‚СЃСЏ СЃ РѕС‚РєР»СЋС‡РµРЅРЅС‹Рј РєРѕР»Р»Р°Р№РґРµСЂРѕРј РёРіСЂРѕРєР°)
+        ParticleSystem deathEffectInstance = null;
+        if (deathEffectPrefab != null)
+        {
+            GameObject effectGO = Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+            deathEffectInstance = effectGO.GetComponent<ParticleSystem>();
+            if (deathEffectInstance == null) Debug.LogError("РџСЂРµС„Р°Р± СЌС„С„РµРєС‚Р° РЅРµ СЃРѕРґРµСЂР¶РёС‚ ParticleSystem!", effectGO);
+        }
+        else Debug.LogWarning("РџСЂРµС„Р°Р± СЌС„С„РµРєС‚Р° СЃРјРµСЂС‚Рё РЅРµ РЅР°Р·РЅР°С‡РµРЅ!");
+
+
+        // 3. Р—РђРџРЈРЎРљРђР•Рњ РћР–РР”РђРќРР• Р·Р°РІРµСЂС€РµРЅРёСЏ СЌС„С„РµРєС‚Р° Рё РїРѕСЃР»РµРґСѓСЋС‰РёР№ СЂРµСЃРїР°СѓРЅ
+        StartCoroutine(WaitForEffectAndStartRespawn(deathEffectInstance));
+    }
+
+    // РљРѕСЂСѓС‚РёРЅР° РѕР¶РёРґР°РЅРёСЏ (РєРѕРґ Р±РµР· РёР·РјРµРЅРµРЅРёР№)
+    IEnumerator WaitForEffectAndStartRespawn(ParticleSystem effectSystem)
+    {
+        if (effectSystem != null)
+        {
+            Debug.Log("РќР°С‡РёРЅР°РµРј РѕР¶РёРґР°РЅРёРµ Р·Р°РІРµСЂС€РµРЅРёСЏ СЌС„С„РµРєС‚Р°...");
+            while (effectSystem != null && effectSystem.IsAlive(true))
             {
-                playerRenderer.enabled = false;
-                yield return new WaitForSeconds(flashDuration);
-                playerRenderer.enabled = true;
-                yield return new WaitForSeconds(flashDuration);
+                yield return null;
             }
-            playerRenderer.enabled = true; // Убедимся, что игрок видим в конце
+            Debug.Log("Р­С„С„РµРєС‚ СЃРјРµСЂС‚Рё Р·Р°РІРµСЂС€РёР»СЃСЏ РёР»Рё Р±С‹Р» СѓРЅРёС‡С‚РѕР¶РµРЅ.");
+        }
+        else Debug.LogWarning("Р­С„С„РµРєС‚ РґР»СЏ РѕР¶РёРґР°РЅРёСЏ РЅРµ РЅР°Р№РґРµРЅ.");
+
+        Debug.Log("РќР°С‡РёРЅР°РµРј СЂРµСЃРїР°СѓРЅ (РїРµСЂРµРјРµС‰РµРЅРёРµ Рё РјРёРіР°РЅРёРµ)...");
+        StartCoroutine(RespawnCoroutine());
+    }
+
+    // РћСЃРЅРѕРІРЅР°СЏ РєРѕСЂСѓС‚РёРЅР° СЂРµСЃРїР°СѓРЅР° (РЅСѓР¶РЅРѕ РІРєР»СЋС‡РёС‚СЊ РєРѕР»Р»Р°Р№РґРµСЂ РѕР±СЂР°С‚РЅРѕ!)
+    IEnumerator RespawnCoroutine()
+    {
+        // 1. РџРµСЂРµРјРµС‰РµРЅРёРµ (РёРіСЂРѕРє РІСЃРµ РµС‰Рµ РЅРµРІРёРґРёРј Рё РєРѕР»Р»Р°Р№РґРµСЂ РІС‹РєР»СЋС‡РµРЅ)
+        transform.position = startPosition;
+        yield return null;
+
+        // 2. РњРёРіР°РЅРёРµ (РґРµР»Р°РµРј РёРіСЂРѕРєР° РІРёРґРёРјС‹Рј)
+        if (playerRenderer != null)
+        {
+            bool finalState = true; // Р”Р»СЏ С‡РµСЂРµРґРѕРІР°РЅРёСЏ
+            for (int i = 0; i < flashCount * 2; i++) // РЈРјРЅРѕР¶Р°РµРј РЅР° 2, С‚.Рє. РІРєР»/РІС‹РєР»
+            {
+                playerRenderer.enabled = finalState;
+                yield return new WaitForSeconds(flashDuration);
+                finalState = !finalState; // РРЅРІРµСЂС‚РёСЂСѓРµРј
+            }
+            playerRenderer.enabled = true; // РЈР±РµРґРёРјСЃСЏ, С‡С‚Рѕ РІРєР»СЋС‡РµРЅ РІ РєРѕРЅС†Рµ
         }
         else
         {
-            // Если рендерер не найден, просто ждем эквивалентное время
-            Debug.LogWarning("Renderer не найден, мигание невозможно.");
+            // Р•СЃР»Рё РЅРµС‚ СЂРµРЅРґРµСЂРµСЂР°, РїСЂРѕСЃС‚Рѕ Р¶РґРµРј
             yield return new WaitForSeconds(flashCount * flashDuration * 2);
         }
 
-        // 3. ВОССТАНОВЛЕНИЕ ФИЗИКИ И СБРОС ФЛАГА
+        // 3. Р’РѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёСЏ РџР•Р Р•Р” РІРѕР·РІСЂР°С‚РѕРј СѓРїСЂР°РІР»РµРЅРёСЏ С„РёР·РёРєРµ
+        if (playerCollider != null)
+        {
+            playerCollider.enabled = true; // <--- Р’РђР–РќРћ: Р’РєР»СЋС‡Р°РµРј РєРѕР»Р»Р°Р№РґРµСЂ РѕР±СЂР°С‚РЅРѕ!
+        }
         if (playerRigidbody != null)
         {
-            playerRigidbody.isKinematic = false; // Возвращаем обычное физическое поведение
+            playerRigidbody.isKinematic = false; // Р’РѕР·РІСЂР°С‰Р°РµРј С„РёР·РёРєСѓ
         }
-        isRespawning = false; // Снимаем флаг, разрешаем новые столкновения
-        Debug.Log("Респаун завершен.");
-    }
 
-    // Методы Die() и LoadNextLevel() остаются без изменений
-   
+        isRespawning = false;
+        Debug.Log("Р РµСЃРїР°СѓРЅ Р·Р°РІРµСЂС€РµРЅ.");
+    }
 }

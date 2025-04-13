@@ -5,17 +5,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{32C3BDE6-E125-3128-82C1-25D0441455A3}|Assembly-CSharp.csproj|c:\\users\\drdra\\desktop\\unitylesson\\13.3 wild ball 3\\13.3-wild-ball-3\\my project\\assets\\scripts\\playerinteractionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{32C3BDE6-E125-3128-82C1-25D0441455A3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playerinteractionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\drdra\\Desktop\\unitylesson\\12.5 Wild Ball 2\\wild ball 2\\wild-ball-2\\Assets\\Scripts\\PlayerInteractionHandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{32C3BDE6-E125-3128-82C1-25D0441455A3}|Assembly-CSharp.csproj|C:\\Users\\drdra\\Desktop\\unitylesson\\13.3 Wild Ball 3\\13.3-Wild-Ball-3\\My project\\assets\\scripts\\bonuspickup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{32C3BDE6-E125-3128-82C1-25D0441455A3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\bonuspickup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{32C3BDE6-E125-3128-82C1-25D0441455A3}|Assembly-CSharp.csproj|C:\\Users\\drdra\\Desktop\\unitylesson\\13.3 Wild Ball 3\\13.3-Wild-Ball-3\\My project\\assets\\scripts\\camerafollow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{32C3BDE6-E125-3128-82C1-25D0441455A3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\camerafollow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -35,48 +24,9 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerInteractionHandler.cs",
               "ToolTip": "C:\\Users\\drdra\\Desktop\\unitylesson\\13.3 Wild Ball 3\\13.3-Wild-Ball-3\\My project\\Assets\\Scripts\\PlayerInteractionHandler.cs",
               "RelativeToolTip": "Assets\\Scripts\\PlayerInteractionHandler.cs",
-              "ViewState": "AgIAAEUAAAAAAAAAAAAiwFQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAswBcAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-10T08:45:58.556Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "PlayerInteractionHandler.cs",
-              "DocumentMoniker": "C:\\Users\\drdra\\Desktop\\unitylesson\\12.5 Wild Ball 2\\wild ball 2\\wild-ball-2\\Assets\\Scripts\\PlayerInteractionHandler.cs",
-              "RelativeDocumentMoniker": "..\\..\\..\\12.5 Wild Ball 2\\wild ball 2\\wild-ball-2\\Assets\\Scripts\\PlayerInteractionHandler.cs",
-              "ToolTip": "C:\\Users\\drdra\\Desktop\\unitylesson\\12.5 Wild Ball 2\\wild ball 2\\wild-ball-2\\Assets\\Scripts\\PlayerInteractionHandler.cs",
-              "RelativeToolTip": "..\\..\\..\\12.5 Wild Ball 2\\wild ball 2\\wild-ball-2\\Assets\\Scripts\\PlayerInteractionHandler.cs",
-              "ViewState": "AgIAAGwAAAAAAAAAAAAqwHoAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-10T08:38:44.555Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "BonusPickup.cs",
-              "DocumentMoniker": "C:\\Users\\drdra\\Desktop\\unitylesson\\13.3 Wild Ball 3\\13.3-Wild-Ball-3\\My project\\Assets\\Scripts\\BonusPickup.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\BonusPickup.cs",
-              "ToolTip": "C:\\Users\\drdra\\Desktop\\unitylesson\\13.3 Wild Ball 3\\13.3-Wild-Ball-3\\My project\\Assets\\Scripts\\BonusPickup.cs",
-              "RelativeToolTip": "Assets\\Scripts\\BonusPickup.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD0AAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-10T08:23:54.091Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "CameraFollow.cs",
-              "DocumentMoniker": "C:\\Users\\drdra\\Desktop\\unitylesson\\13.3 Wild Ball 3\\13.3-Wild-Ball-3\\My project\\Assets\\Scripts\\CameraFollow.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\CameraFollow.cs",
-              "ToolTip": "C:\\Users\\drdra\\Desktop\\unitylesson\\13.3 Wild Ball 3\\13.3-Wild-Ball-3\\My project\\Assets\\Scripts\\CameraFollow.cs",
-              "RelativeToolTip": "Assets\\Scripts\\CameraFollow.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-10T07:13:49.823Z",
               "EditorCaption": ""
             }
           ]
